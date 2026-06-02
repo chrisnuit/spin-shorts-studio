@@ -52,9 +52,9 @@ export const Pointer: React.FC<PointerProps> = ({
         width: 36,
         height: 36,
         borderRadius: "50%",
-        background: "rgba(255,255,255,0.55)",
-        border: "2px solid rgba(255,255,255,0.9)",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.3)",
+        background: "rgba(86,0,217,0.28)",
+        border: "2.5px solid #5600D9",
+        boxShadow: "0 2px 14px rgba(86,0,217,0.45)",
         opacity,
         pointerEvents: "none",
       }}
@@ -63,7 +63,6 @@ export const Pointer: React.FC<PointerProps> = ({
 };
 
 interface TapDotProps {
-  frame: number;
   at: Point;
   startFrame: number;
 }
@@ -93,8 +92,8 @@ export const TapDot: React.FC<TapDotProps> = ({ at, startFrame }) => {
         width: 40,
         height: 40,
         borderRadius: "50%",
-        background: "rgba(255,255,255,0.45)",
-        border: "2px solid rgba(255,255,255,0.7)",
+        background: "rgba(86,0,217,0.22)",
+        border: "2px solid rgba(86,0,217,0.6)",
         transform: `scale(${scale})`,
         opacity,
         pointerEvents: "none",
