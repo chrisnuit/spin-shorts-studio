@@ -3,14 +3,24 @@ import { Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "re
 
 type Point = { x: number; y: number };
 
+/** A position the persistent pointer should reach by `frame` (relative to startFrame). */
+type Waypoint = { point: Point; frame: number };
+
 const EASE_OUT = Easing.bezier(0.16, 1, 0.3, 1);
 
 interface PointerProps {
   startFrame: number;
-  from: Point;
-  to: Point;
-  travelDuration?: number;
   fadeInDuration?: number;
+  /** Simple mode: a single straight glide from → to. */
+  from?: Point;
+  to?: Point;
+  travelDuration?: number;
+  /**
+   * Persistent-pointer mode: ONE cursor that glides between several targets
+   * without resetting. Use this for multiple taps on the same UI so two
+   * cursors never appear at once. Frames are relative to startFrame.
+   */
+  path?: Waypoint[];
 }
 
 export const Pointer: React.FC<PointerProps> = ({
@@ -19,6 +29,7 @@ export const Pointer: React.FC<PointerProps> = ({
   to,
   travelDuration = 20,
   fadeInDuration = 8,
+  path,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -33,15 +44,32 @@ export const Pointer: React.FC<PointerProps> = ({
           extrapolateRight: "clamp",
         });
 
-  const travel = spring({
-    fps,
-    frame: Math.max(0, relFrame - fadeInDuration),
-    config: { damping: 18, stiffness: 120, mass: 0.8 },
-    durationInFrames: travelDuration,
-  });
+  let x: number;
+  let y: number;
 
-  const x = interpolate(travel, [0, 1], [from.x, to.x]);
-  const y = interpolate(travel, [0, 1], [from.y, to.y]);
+  if (path && path.length > 0) {
+    // Multi-waypoint: interpolate position across the keyframes (eased per segment).
+    const frames = path.map((w) => w.frame);
+    x = interpolate(relFrame, frames, path.map((w) => w.point.x), {
+      easing: EASE_OUT,
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
+    y = interpolate(relFrame, frames, path.map((w) => w.point.y), {
+      easing: EASE_OUT,
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
+  } else {
+    const travel = spring({
+      fps,
+      frame: Math.max(0, relFrame - fadeInDuration),
+      config: { damping: 18, stiffness: 120, mass: 0.8 },
+      durationInFrames: travelDuration,
+    });
+    x = interpolate(travel, [0, 1], [from!.x, to!.x]);
+    y = interpolate(travel, [0, 1], [from!.y, to!.y]);
+  }
 
   if (relFrame < 0) return null;
 
