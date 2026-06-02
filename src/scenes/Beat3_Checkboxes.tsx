@@ -1,5 +1,5 @@
 import React from "react";
-import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import { Easing, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import { TwoColumn } from "../TwoColumn";
 import { Pointer, TapDot } from "../Cursor";
 
@@ -10,6 +10,7 @@ const START = { x: 219, y: 295 };
 export const Beat3_Checkboxes: React.FC<{ text: string }> = ({ text }) => {
   const frame = useCurrentFrame();
   const filledOpacity = interpolate(frame, [50, 62], [0, 1], {
+    easing: Easing.bezier(0.16, 1, 0.3, 1),
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

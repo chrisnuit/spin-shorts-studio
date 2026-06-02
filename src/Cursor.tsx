@@ -1,7 +1,9 @@
 import React from "react";
-import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 
 type Point = { x: number; y: number };
+
+const EASE_OUT = Easing.bezier(0.16, 1, 0.3, 1);
 
 interface PointerProps {
   startFrame: number;
@@ -72,6 +74,7 @@ export const TapDot: React.FC<TapDotProps> = ({ at, startFrame }) => {
   const relFrame = frame - startFrame;
 
   const scale = interpolate(relFrame, [0, 12], [0.3, 2.2], {
+    easing: EASE_OUT,
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

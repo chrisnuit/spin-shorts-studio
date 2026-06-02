@@ -1,5 +1,8 @@
 import React from "react";
-import { interpolate, useCurrentFrame } from "remotion";
+import { Easing, interpolate, useCurrentFrame } from "remotion";
+
+// Crisp UI entrance curve (strong ease-out) — per Remotion best practices
+const EASE_OUT = Easing.bezier(0.16, 1, 0.3, 1);
 import { color, radius, space, fontWeight } from "./theme";
 import { montserrat, openSans } from "./fonts";
 
@@ -42,15 +45,15 @@ export const TwoColumn: React.FC<{
 
   const translateY = isStaticText
     ? 0
-    : interpolate(rel, [0, 14], [28, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+    : interpolate(rel, [0, 14], [28, 0], { easing: EASE_OUT, extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const opacity = isStaticText
     ? 1
-    : interpolate(rel, [0, 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+    : interpolate(rel, [0, 12], [0, 1], { easing: EASE_OUT, extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const eyebrowOpacity = isStaticText
     ? 1
-    : interpolate(rel, [2, 14], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+    : interpolate(rel, [2, 14], [0, 1], { easing: EASE_OUT, extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
     <div
