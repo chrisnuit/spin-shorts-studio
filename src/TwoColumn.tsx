@@ -111,7 +111,6 @@ export const TwoColumn: React.FC<{
             opacity: rel < 0 ? 0 : eyebrowOpacity,
           }}
         >
-          <span style={{ width: 28, height: 4, borderRadius: 2, background: color.brand.secondary }} />
           <span
             style={{
               fontFamily: openSans,
